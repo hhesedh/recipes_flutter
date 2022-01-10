@@ -6,7 +6,7 @@ part 'recipe_service.chopper.dart';
 
 const String apiKey = '<Your Key>';
 const String apiId = '<your ID>';
-const String apiUrl = 'https://api.edamam.com/search';
+const String apiUrl = 'https://api.edamam.com';
 
 @ChopperApi()
 abstract class RecipeService extends ChopperService {
