@@ -39,26 +39,28 @@ class _RecipeListState extends State<RecipeList> {
     getPreviousSearches();
 
     searchTextController = TextEditingController(text: '');
-    _scrollController.addListener(() {
-      final triggerFetchMoreSize =
-          0.7 * _scrollController.position.maxScrollExtent;
+    _scrollController
+      ..addListener(() {
+        final triggerFetchMoreSize =
+            0.7 * _scrollController.position.maxScrollExtent;
 
-      if (_scrollController.position.pixels > triggerFetchMoreSize) {
-        if (hasMore &&
-            currentEndPosition < currentCount &&
-            !loading &&
-            !inErrorState) {
-          setState(() {
-            loading = true;
-            currentStartPosition = currentEndPosition;
-            currentEndPosition =
-                min(currentStartPosition + pageCount, currentCount);
-          });
+        if (_scrollController.position.pixels > triggerFetchMoreSize) {
+          if (hasMore &&
+              currentEndPosition < currentCount &&
+              !loading &&
+              !inErrorState) {
+            setState(() {
+              loading = true;
+              currentStartPosition = currentEndPosition;
+              currentEndPosition =
+                  min(currentStartPosition + pageCount, currentCount);
+            });
+          }
         }
-      }
-    });
+      });
   }
 
+  // TODO: Delete getRecipeData()
   Future<APIRecipeQuery> getRecipeData(String query, int from, int to) async {
     final recipeJson = await RecipeService().getRecipes(query, from, to);
     final recipeMap = json.decode(recipeJson);
@@ -199,13 +201,9 @@ class _RecipeListState extends State<RecipeList> {
     // TODO: change with new response
     return FutureBuilder<APIRecipeQuery>(
       // TODO: change with new RecipeService
-      future: getRecipeData(
-        searchTextController.text.trim(),
-        currentStartPosition,
-        currentEndPosition,
-      ),
+      future: getRecipeData(searchTextController.text.trim(),
+          currentStartPosition, currentEndPosition),
       builder: (context, snapshot) {
-        print("${snapshot.connectionState}, $loading");
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasError) {
             return Center(
